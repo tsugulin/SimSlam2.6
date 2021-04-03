@@ -9,6 +9,8 @@ void Select::initialize()
     // 変数初期化
     onLoading1 = false;
     onLoading2 = false;
+    loader1 = simTime();
+    loader2 = simTime();
 
     // BlockingQueueノードのポインタを取得
     cModule *mod1 = gate("in1")->getPreviousGate()->getOwnerModule();
@@ -56,7 +58,7 @@ void Select::request()
     before3->dispatch(lastTime);
 
     // 待ち時間が長い方の積込機を利用して積込作業を行う
-    if (!onLoading1 && loader1 < loader2) {     // 積込機1の待ち時間が長い
+    if (!onLoading1 && loader1 <= loader2) {     // 積込機1の待ち時間が長い
         onLoading1 = true;
         cMessage *msg = new cMessage("loading1");   // メッセージを生成
         scheduleAt(simTime() + par("productionTime1"), msg);
